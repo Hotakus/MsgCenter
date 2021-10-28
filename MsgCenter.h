@@ -54,7 +54,7 @@ namespace msgmanager {
 		 * @param msgName : Msg callback name
 		 * @param msg     : Msg that want to emit
 		 */
-		void run(String msgName, msg_t* msg) {
+		void publish(const String& msgName, msg_t* msg) {
 			auto _node = this->info.msg_list.find(msgName);
 			if (_node)
 				_node->node_data<msg_callback_t>()(msg);
@@ -80,7 +80,6 @@ namespace msgmanager {
 
 		bool subscribe(subscriber_t* subscriber);
 		bool unsubscribe(subscriber_t* subscriber);
-		bool publish();
 		bool notify(String& subscriberName, String& msgName);
 		bool notify(subscriber_t* subscriber, String& msgName);
 

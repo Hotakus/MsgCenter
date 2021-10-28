@@ -20,10 +20,10 @@ public:
 	bool push_back(String _name,void* _pData);
 	bool push_front(chain_node_t* _node);
 	bool pop();
-	bool erase(String name);
+	bool erase(const String& name);
 	bool insert(chain_node_t* _node, size_t _id);
 
-	chain_node_t* find(String name);
+	chain_node_t* find(const String& name);
 
 	chain_node_t* head();
 	chain_node_t* tail();

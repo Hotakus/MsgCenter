@@ -5,15 +5,8 @@
 
 using namespace msgmanager;
 
-MsgCenter::MsgCenter()
-{
-
-}
-
-MsgCenter::~MsgCenter()
-{
-
-}
+MsgCenter::MsgCenter() = default;
+MsgCenter::~MsgCenter() = default;
 
 void MsgCenter::begin()
 {
@@ -53,11 +46,6 @@ bool MsgCenter::unsubscribe(subscriber_t *subscriber)
 	return true;
 }
 
-bool MsgCenter::publish()
-{
-	return false;
-}
-
 bool MsgCenter::notify(String &subscriberName, String &msgName)
 {
 	if (subscriberName == "") {
@@ -78,7 +66,7 @@ bool MsgCenter::notify(String &subscriberName, String &msgName)
 		return false;
 	}
 
-	subscriber->run(msgName, msg);
+	subscriber->publish(msgName, msg);
 	return true;
 }
 
@@ -97,7 +85,7 @@ bool MsgCenter::notify(subscriber_t *subscriber, String &msgName)
 		return false;
 	}
 
-	subscriber->run(msgName, msg);
+	subscriber->publish(msgName, msg);
 	return true;
 }
 

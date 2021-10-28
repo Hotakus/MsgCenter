@@ -89,7 +89,7 @@ bool Chain::pop()
  * @param name : Node's name
  * @return     : Bool
  */
-bool Chain::erase(String name)
+bool Chain::erase(const String& name)
 {
 	chain_node_t *probe = _head;
 	for (int i = 0; i < _nodeCnt; ++i) {
@@ -132,7 +132,7 @@ chain_node_t *Chain::tail()
  * @param name : Node's name
  * @return     : Nullptr or pointer of node.
  */
-chain_node_t *Chain::find(String name)
+chain_node_t *Chain::find(const String& name)
 {
 	chain_node_t* probe = _head;
 	for (int i = 0; i < _nodeCnt; ++i) {
