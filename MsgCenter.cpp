@@ -134,7 +134,12 @@ void msg_t::set(String &_id, void *_pData)
 static void msg_center_test_cb(msg_t *msg)
 {
 	auto *str = (String *) msg->pData;
+
+#if IS_ARDUINO == 0
 	cout << "Hello world!!! " << *str << endl;
+#else
+	Serial.println(*str);
+#endif
 }
 
 void MsgCenter::msg_center_test()
