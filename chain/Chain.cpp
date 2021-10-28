@@ -56,7 +56,7 @@ bool Chain::push_back(String _name, void *_pData)
 {
 	_nodeCnt += 1;
 	auto *_node = new chain_node_t();
-	_curr->set(_curr->prev(), _node, _curr->node_data<void>());
+	_curr->set(_curr->prev(), _node, _curr->node_data<void*>());
 	_node->set(_curr, nullptr, _pData);
 	_node->name(std::move(_name));
 	_curr = _node;
@@ -97,12 +97,12 @@ bool Chain::erase(String name)
 			if (probe->isHead())
 				return false;
 			chain_node_t* _node = probe->prev();
-			_node->set(_node->prev(), probe->next(), _node->node_data<void>());
+			_node->set(_node->prev(), probe->next(), _node->node_data<void*>());
 			if (_node->isTail()) {
 				_tail = _node;
 				_curr = _node;
 			} else
-				probe->next()->set(_node, probe->next()->next(), probe->next()->node_data<void>());
+				probe->next()->set(_node, probe->next()->next(), probe->next()->node_data<void*>());
 			delete probe;
 			_nodeCnt -= 1;
 			return true;

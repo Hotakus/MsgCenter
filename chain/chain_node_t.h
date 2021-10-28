@@ -20,8 +20,8 @@ public:
 
 	chain_node_t* prev();               // Get previous node
 	chain_node_t* next();               // Get next node
-	template<class T> T* node_data() {
-		T* t = (T*)pData;
+	template<class T> T node_data() {
+		T t = (T)pData;
 		return (t);
 	}
 

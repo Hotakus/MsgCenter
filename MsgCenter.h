@@ -1,6 +1,8 @@
 #ifndef _MSGCENTER_H
 #define _MSGCENTER_H
 
+#include <utility>
+
 #include "conf.h"
 #include "chain/Chain.h"
 
@@ -19,20 +21,45 @@ namespace msgmanager {
 	typedef void (*msg_callback_t)(msg_t* msg);
 	class subscriber_t {
 	public:
-		struct {
+		typedef struct _info{
 			String name;
-			String msg_id;
-			msg_callback_t mcb;
-		} info;
+			Chain msg_list;
+		} info_t;
 
-		void set(String& _name, String& _msg_id, msg_callback_t _mcb) {
-			this->info.name = _name;
-			this->info.msg_id = _msg_id;
-			this->info.mcb = _mcb;
+		info_t info;
+
+		subscriber_t() {
+			info.msg_list.begin();
 		}
 
-		void run(msg_t* msg) {
-			this->info.mcb(msg);
+		~subscriber_t() {
+			info.msg_list.end();
+		}
+
+		void set(String& _name) {
+			this->info.name = _name;
+		}
+
+		/**
+		 * @brief Subscribe msg and callback
+		 * @param msg  : Msg that want to subscribe
+		 * @param _mcb : Callback for the msg
+		 */
+		void subscribe_msg(String msg, msg_callback_t _mcb) {
+			info.msg_list.push_back(std::move(msg), (void*)_mcb);
+		}
+
+		/**
+		 * @brief Run the msg callback
+		 * @param msgName : Msg callback name
+		 * @param msg     : Msg that want to emit
+		 */
+		void run(String msgName, msg_t* msg) {
+			auto _node = this->info.msg_list.find(msgName);
+			if (_node)
+				_node->node_data<msg_callback_t>()(msg);
+			else
+				MSG_PRINT("", "msg callback is null");
 		}
 	};
 
@@ -54,11 +81,14 @@ namespace msgmanager {
 		bool subscribe(subscriber_t* subscriber);
 		bool unsubscribe(subscriber_t* subscriber);
 		bool publish();
-		bool notify(String& subscriberName);
-		bool notify(subscriber_t* subscriber);
+		bool notify(String& subscriberName, String& msgName);
+		bool notify(subscriber_t* subscriber, String& msgName);
 
+		static void msg_center_test();
 	};
 };
+
+
 
 
 #ifdef __cplusplus
@@ -71,4 +101,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif //CPPTEST_MSGCENTER_H
+#endif //_MSGCENTER_H

@@ -58,39 +58,46 @@ bool MsgCenter::publish()
 	return false;
 }
 
-bool MsgCenter::notify(String &subscriberName)
+bool MsgCenter::notify(String &subscriberName, String &msgName)
 {
+	if (subscriberName == "") {
+		MSG_PRINT(TAG, "Subscriber name is null.");
+		return false;
+	}
 	auto _node = subsChain.find(subscriberName);
-	auto subscriber = _node ? _node->node_data<subscriber_t>() : nullptr;
+	auto subscriber = _node ? _node->node_data<subscriber_t *>() : nullptr;
 	if (!subscriber) {
 		MSG_PRINT(TAG, "Subscriber: \"%s\" is not existing.", subscriberName.c_str());
 		return false;
 	}
 
-	_node = msgChain.find(subscriber->info.msg_id);
-	auto msg = _node ? _node->node_data<msg_t>() : nullptr;
+	_node = msgChain.find(msgName);
+	auto msg = _node ? _node->node_data<msg_t *>() : nullptr;
 	if (!msg) {
-		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", subscriber->info.msg_id.c_str());
+		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", msgName.c_str());
 		return false;
 	}
 
-	subscriber->run(msg);
+	subscriber->run(msgName, msg);
 	return true;
 }
 
 
-bool MsgCenter::notify(subscriber_t *subscriber)
+bool MsgCenter::notify(subscriber_t *subscriber, String &msgName)
 {
 	if (!subscriber) {
 		MSG_PRINT(TAG, "Subscriber is null.");
 		return false;
 	}
-	auto msg = msgChain.find(subscriber->info.msg_id)->node_data<msg_t>();
+
+	auto _node = msgChain.find(msgName);
+	auto msg = _node ? _node->node_data<msg_t *>() : nullptr;
 	if (!msg) {
-		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", subscriber->info.msg_id.c_str());
+		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", msgName.c_str());
 		return false;
 	}
-	subscriber->run(msg);
+
+	subscriber->run(msgName, msg);
 	return true;
 }
 
@@ -122,4 +129,45 @@ void msg_t::set(String &_id, void *_pData)
 {
 	this->id = _id;
 	this->pData = _pData;
+}
+
+static void msg_center_test_cb(msg_t *msg)
+{
+	auto *str = (String *) msg->pData;
+	cout << "Hello world!!! " << *str << endl;
+}
+
+void MsgCenter::msg_center_test()
+{
+	MsgCenter mc;
+	mc.begin();
+
+	subscriber_t subscriber;
+	String name = "Hotakus";
+	subscriber.set(name);
+
+	String str = "Hotakus is a handsome man.";
+	msg_t msg;
+	String msg_id = "testMsg";
+	msg.set(msg_id, &str);
+
+	String str2 = "Trisuborn is a handsome man.";
+	String msg_id2 = "testMsg2";
+	msg_t msg2;
+	msg2.set(msg_id2, &str2);
+
+	subscriber.subscribe_msg(msg_id2, msg_center_test_cb);
+	subscriber.subscribe_msg(msg_id, msg_center_test_cb);  // 订阅者订阅消息
+	mc.subscribe(&subscriber);                                  // 注册订阅者
+	mc.addMsg(&msg);                                            // 注册消息
+	mc.addMsg(&msg2);
+
+	mc.notify(&subscriber, msg_id);                          // 通知订阅者
+	mc.notify(&subscriber, msg_id2);
+
+	mc.removeMsg(msg2.id);
+	mc.removeMsg(msg.id);                                    // 注销消息
+	mc.unsubscribe(&subscriber);                                // 注销订阅者
+
+	mc.end();
 }
