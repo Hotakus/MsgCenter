@@ -1,7 +1,7 @@
 #include "conf.h"
 #include "MsgCenter.h"
 
-
+#define TAG "MsgCenter"
 
 using namespace msgmanager;
 
@@ -17,21 +17,14 @@ MsgCenter::~MsgCenter()
 
 void MsgCenter::begin()
 {
-	this->pMsgBuff = (msg_t **) MSG_ALLOC(sizeof(msg_t *));
-	this->pSubscriberBuff = (subscriber_t **) MSG_ALLOC(sizeof(subscriber_t *));
+	msgChain.begin();
+	subsChain.begin();
 }
 
 void MsgCenter::end()
 {
-	for (size_t i = 0; i < msgCnt; ++i)
-		if (this->pMsgBuff[i])
-			MSG_FREE(this->pMsgBuff[i]);
-	MSG_FREE(this->pMsgBuff);
-
-	for (size_t i = 0; i < subscriberCnt; ++i)
-		if (this->pSubscriberBuff[i])
-			MSG_FREE(this->pSubscriberBuff[i]);
-	MSG_FREE(this->pSubscriberBuff);
+	msgChain.end();
+	subsChain.end();
 }
 
 bool MsgCenter::subscribe(subscriber_t *subscriber)
@@ -40,10 +33,7 @@ bool MsgCenter::subscribe(subscriber_t *subscriber)
 		MSG_PRINT(TAG, "Subscriber is null.");
 		return false;
 	}
-	subscriberCnt += 1;
-	MSG_REALLOC(pSubscriberBuff, (sizeof(subscriber_t *) * subscriberCnt));
-	pSubscriberBuff[subscriberCnt - 1] = (subscriber_t *) MSG_ALLOC(sizeof(subscriber_t));
-	pSubscriberBuff[subscriberCnt - 1]->set(subscriber->name, subscriber->msg_id, subscriber->mcb);
+	subsChain.push_back(subscriber->info.name, subscriber);
 	return true;
 }
 
@@ -54,15 +44,12 @@ bool MsgCenter::unsubscribe(subscriber_t *subscriber)
 		return false;
 	}
 
-	if (subscriberCnt == 0) {
-
+	if (subsChain.nodeCnt() == 0) {
+		MSG_PRINT(TAG, "Subscriber's count is nil.");
 		return false;
 	}
 
-	subscriberCnt -= 1;
-	MSG_FREE(pSubscriberBuff[subscriberCnt]);
-	MSG_REALLOC(pSubscriberBuff, (sizeof(subscriber_t *) * subscriberCnt));
-
+	subsChain.erase(subscriber->info.name);
 	return true;
 }
 
@@ -73,65 +60,49 @@ bool MsgCenter::publish()
 
 bool MsgCenter::notify(String &subscriberName)
 {
-	subscriber_t *subscriber = nullptr;
-	msg_t *msg = nullptr;
-
-	for (size_t i = 0; i < subscriberCnt; ++i) {
-		if (pSubscriberBuff[i]->name == subscriberName) {
-			subscriber = pSubscriberBuff[i];
-		}
-	}
+	auto _node = subsChain.find(subscriberName);
+	auto subscriber = _node ? _node->node_data<subscriber_t>() : nullptr;
 	if (!subscriber) {
-		MSG_PRINT(TAG, "Subscriber is not existing.");
+		MSG_PRINT(TAG, "Subscriber: \"%s\" is not existing.", subscriberName.c_str());
 		return false;
 	}
 
-	for (size_t i = 0; i < msgCnt; ++i) {
-		if (pMsgBuff[i]->id == subscriber->msg_id) {
-			msg = pMsgBuff[i];
-		}
-	}
+	_node = msgChain.find(subscriber->info.msg_id);
+	auto msg = _node ? _node->node_data<msg_t>() : nullptr;
 	if (!msg) {
-		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", subscriber->msg_id.c_str());
+		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", subscriber->info.msg_id.c_str());
 		return false;
 	}
 
-	subscriber->mcb(msg);
-
+	subscriber->run(msg);
 	return true;
 }
 
-void MsgCenter::_addMsg(String &msgName, void *pData)
-{
-	msgCnt += 1;
-	MSG_REALLOC(pMsgBuff, (sizeof(msg_t *) * msgCnt));
-	pMsgBuff[msgCnt - 1] = (msg_t *) MSG_ALLOC(sizeof(msg_t));
-	pMsgBuff[msgCnt - 1]->set(msgName, pData);
-}
 
-bool MsgCenter::addMsg(String &msgName)
+bool MsgCenter::notify(subscriber_t *subscriber)
 {
-	_addMsg(msgName, nullptr);
+	if (!subscriber) {
+		MSG_PRINT(TAG, "Subscriber is null.");
+		return false;
+	}
+	auto msg = msgChain.find(subscriber->info.msg_id)->node_data<msg_t>();
+	if (!msg) {
+		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", subscriber->info.msg_id.c_str());
+		return false;
+	}
+	subscriber->run(msg);
 	return true;
 }
 
-bool MsgCenter::addMsg(String &msgName, void *pData)
+bool MsgCenter::addMsg(msg_t *msg)
 {
-	_addMsg(msgName, pData);
-	return true;
+	return msgChain.push_back(msg->id, msg);
 }
 
 bool MsgCenter::removeMsg(String &msgName)
 {
-	for (size_t i = 0; i < msgCnt; ++i) {
-		if (pMsgBuff[i]->id == msgName) {
-			msgCnt -= 1;
-			MSG_FREE(pMsgBuff[msgCnt]);
-			MSG_REALLOC(pMsgBuff, (sizeof(msg_t *) * msgCnt));
-			return true;
-		}
-	}
-
+	if (msgChain.erase(msgName))
+		return true;
 	MSG_PRINT(TAG, "Remove \"%s\" failed.", msgName.c_str());
 	return false;
 }
@@ -139,4 +110,16 @@ bool MsgCenter::removeMsg(String &msgName)
 void MsgCenter::peek()
 {
 
+}
+
+template<class T>
+T *msg_t::data()
+{
+	return ((T *) pData);
+}
+
+void msg_t::set(String &_id, void *_pData)
+{
+	this->id = _id;
+	this->pData = _pData;
 }

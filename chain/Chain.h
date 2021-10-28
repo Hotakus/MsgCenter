@@ -1,30 +1,36 @@
-#ifndef CPPTEST_CHAIN_H
-#define CPPTEST_CHAIN_H
+#ifndef _CHAIN_H
+#define _CHAIN_H
 
 #include "chain_node_t.h"
 
 class Chain {
 private:
-	size_t nodeCnt = 0;
+	size_t _nodeCnt = 1;
 	chain_node_t* _head = nullptr;
 	chain_node_t* _tail = nullptr;
-public:
+	chain_node_t* _curr = nullptr;
 
-	chain_node_t* headNode = nullptr;
+public:
+	Chain();
+	~Chain();
 
 	void begin();
 	void end();
 
-	bool push_back(chain_node_t* _node);
+	bool push_back(String _name,void* _pData);
 	bool push_front(chain_node_t* _node);
 	bool pop();
-	bool erase(size_t _id);
+	bool erase(String name);
 	bool insert(chain_node_t* _node, size_t _id);
+
+	chain_node_t* find(String name);
 
 	chain_node_t* head();
 	chain_node_t* tail();
 
-
+	size_t nodeCnt() {
+		return this->_nodeCnt;
+	}
 };
 
 
@@ -39,4 +45,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif //CPPTEST_CHAIN_H
+#endif //_CHAIN_H

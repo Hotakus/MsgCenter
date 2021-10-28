@@ -31,12 +31,3 @@ chain_node_t* chain_node_t::prev() {
 chain_node_t* chain_node_t::next() {
 	return this->nextNode;
 }
-
-template<class T> T* chain_node_t::node_data() {
-	return ((T*)pData);
-}
-
-int chain_node_t::node_id()
-{
-	return this->id;
-}

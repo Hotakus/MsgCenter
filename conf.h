@@ -1,5 +1,5 @@
-#ifndef CPPTEST_CONF_H
-#define CPPTEST_CONF_H
+#ifndef MSG_CENTER_CONF_H
+#define MSG_CENTER_CONF_H
 
 #define IS_ARDUINO 0
 
@@ -12,7 +12,6 @@ typedef std::string String;
 
 using namespace std;
 
-#define TAG "MsgCenter"
 #define MSG_PRINT(tag, fmt, ...)    printf(fmt"\r\n", ##__VA_ARGS__)
 #define MSG_ALLOC                   malloc
 #define MSG_REALLOC                 realloc
@@ -43,4 +42,4 @@ extern "C" {
 }
 #endif // __cplusplus
 
-#endif //CPPTEST_CONF_H
+#endif //MSG_CENTER_CONF_H
