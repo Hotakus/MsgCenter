@@ -76,10 +76,12 @@ namespace msgmanager {
 		static void peek();
 
 		bool addMsg(msg_t* msg);
-		bool removeMsg(String& msgName);
+		bool removeMsg(String msgName);
+		msg_t* findMsg(String msgName);
 
 		bool subscribe(subscriber_t* subscriber);
 		bool unsubscribe(subscriber_t* subscriber);
+		subscriber_t* findSubscriber(String msgName);
 		bool notify(String& subscriberName, String& msgName);
 		bool notify(subscriber_t* subscriber, String& msgName);
 

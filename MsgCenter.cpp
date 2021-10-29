@@ -96,7 +96,7 @@ bool MsgCenter::addMsg(msg_t *msg)
 	return msgChain.push_back(msg->id, msg);
 }
 
-bool MsgCenter::removeMsg(String &msgName)
+bool MsgCenter::removeMsg(String msgName)
 {
 	if (msgChain.erase(msgName))
 		return true;
@@ -107,6 +107,22 @@ bool MsgCenter::removeMsg(String &msgName)
 void MsgCenter::peek()
 {
 
+}
+
+msg_t* MsgCenter::findMsg(String msgName)
+{
+	chain_node_t* _node = msgChain.find(msgName);
+	if (_node)
+		return _node->node_data<msg_t*>();
+	return nullptr;
+}
+
+subscriber_t* MsgCenter::findSubscriber(String subscriberName)
+{
+	chain_node_t* _node = msgChain.find(subscriberName);
+	if (_node)
+		return _node->node_data<subscriber_t*>();
+	return nullptr;
 }
 
 template<class T>
@@ -166,3 +182,4 @@ void MsgCenter::msg_center_test()
 
 	mc.end();
 }
+
