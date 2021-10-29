@@ -18,7 +18,6 @@ private:
 	chain_node_t* _head = nullptr;
 	chain_node_t* _tail = nullptr;
 	chain_node_t* _curr = nullptr;
-
 public:
 	Chain();
 	~Chain();

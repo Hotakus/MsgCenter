@@ -83,7 +83,7 @@ bool Chain::pop()
 }
 
 /**
- * @brief Delete a node designated.
+ * @brief Delete a designated node.
  * @param name : Node's name
  * @return     : Bool
  */
