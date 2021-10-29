@@ -1,6 +1,8 @@
 #include "conf.h"
 #include "MsgCenter.h"
 
+#include <utility>
+
 #define TAG "MsgCenter"
 
 using namespace msgmanager;
@@ -113,9 +115,9 @@ T *msg_t::data()
 	return ((T *) pData);
 }
 
-void msg_t::set(String &_id, void *_pData)
+void msg_t::set(String _id, void *_pData)
 {
-	this->id = _id;
+	this->id = std::move(_id);
 	this->pData = _pData;
 }
 

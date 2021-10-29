@@ -14,7 +14,7 @@ namespace msgmanager {
 		String id;
 		void* pData;
 
-		void set(String& _id, void* _pData);
+		void set(String _id, void* _pData);
 		template<class T> T* data();    // Get data by T
 	};
 
