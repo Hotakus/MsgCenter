@@ -1,13 +1,12 @@
 #include "conf.h"
 #include "MsgCenter.h"
 
-#include <utility>
-
 #define TAG "MsgCenter"
 
 using namespace msgmanager;
 
 MsgCenter::MsgCenter() = default;
+
 MsgCenter::~MsgCenter() = default;
 
 void MsgCenter::begin()
@@ -22,6 +21,11 @@ void MsgCenter::end()
 	subsChain.end();
 }
 
+/**
+ * @brief Subscribe.
+ * @param subscriber : The pointer of subscriber
+ * @return true or false
+ */
 bool MsgCenter::subscribe(subscriber_t *subscriber)
 {
 	if (!subscriber) {
@@ -32,6 +36,11 @@ bool MsgCenter::subscribe(subscriber_t *subscriber)
 	return true;
 }
 
+/**
+ * @brief Unsubscribe
+ * @param subscriber : The pointer of subscriber
+ * @return true or false
+ */
 bool MsgCenter::unsubscribe(subscriber_t *subscriber)
 {
 	if (!subscriber) {
@@ -48,7 +57,13 @@ bool MsgCenter::unsubscribe(subscriber_t *subscriber)
 	return true;
 }
 
-bool MsgCenter::notify(String &subscriberName, String &msgName)
+/**
+ * @brief Notify designated subscriber by designated msg
+ * @param subscriberName : Name of subscriber
+ * @param msgName        : Name of msg
+ * @return true or false
+ */
+bool MsgCenter::notify(const String &subscriberName, const String &msgName)
 {
 	if (subscriberName == "") {
 		MSG_PRINT(TAG, "Subscriber name is null.");
@@ -72,8 +87,13 @@ bool MsgCenter::notify(String &subscriberName, String &msgName)
 	return true;
 }
 
-
-bool MsgCenter::notify(subscriber_t *subscriber, String &msgName)
+/**
+ * @brief Notify designated subscriber by designated msg
+ * @param subscriberName : The pointer of subscriber
+ * @param msgName        : Name of msg
+ * @return true or false
+ */
+bool MsgCenter::notify(subscriber_t *subscriber, const String& msgName)
 {
 	if (!subscriber) {
 		MSG_PRINT(TAG, "Subscriber is null.");
@@ -91,12 +111,44 @@ bool MsgCenter::notify(subscriber_t *subscriber, String &msgName)
 	return true;
 }
 
-bool MsgCenter::addMsg(msg_t *msg)
+/**
+ * @brief Notify designated subscriber by designated msg
+ * @param subscriber : The pointer of subscriber
+ * @param msg        : The pointer of msg
+ * @return true or false
+ */
+bool MsgCenter::notify(subscriber_t *subscriber, msg_t *msg)
 {
-	return msgChain.push_back(msg->id, msg);
+	if (!subscriber) {
+		MSG_PRINT(TAG, "Subscriber is null.");
+		return false;
+	}
+
+	if (!msg) {
+		MSG_PRINT(TAG, "Msg is null.");
+		return false;
+	}
+
+	subscriber->publish(msg->id(), msg);
+	return true;
 }
 
-bool MsgCenter::removeMsg(String msgName)
+/**
+ * @brief Add a msg into chain.
+ * @param msg : msg
+ * @return true or false
+ */
+bool MsgCenter::addMsg(msg_t *msg)
+{
+	return msgChain.push_back(msg->id(), msg);
+}
+
+/**
+ * @brief remove designated msg out.
+ * @param msgName : Name of msg
+ * @return true or false
+ */
+bool MsgCenter::removeMsg(const String &msgName)
 {
 	if (msgChain.erase(msgName))
 		return true;
@@ -109,37 +161,26 @@ void MsgCenter::peek()
 
 }
 
-msg_t* MsgCenter::findMsg(String msgName)
+msg_t *MsgCenter::findMsg(const String &msgName)
 {
-	chain_node_t* _node = msgChain.find(msgName);
+	chain_node_t *_node = msgChain.find(msgName);
 	if (_node)
-		return _node->node_data<msg_t*>();
+		return _node->node_data<msg_t *>();
 	return nullptr;
 }
 
-subscriber_t* MsgCenter::findSubscriber(String subscriberName)
+subscriber_t *MsgCenter::findSubscriber(const String &subscriberName)
 {
-	chain_node_t* _node = msgChain.find(subscriberName);
+	chain_node_t *_node = msgChain.find(subscriberName);
 	if (_node)
-		return _node->node_data<subscriber_t*>();
+		return _node->node_data<subscriber_t *>();
 	return nullptr;
 }
 
-template<class T>
-T *msg_t::data()
-{
-	return ((T *) pData);
-}
-
-void msg_t::set(String _id, void *_pData)
-{
-	this->id = std::move(_id);
-	this->pData = _pData;
-}
 
 static void msg_center_test_cb(msg_t *msg)
 {
-	auto *str = (String *) msg->pData;
+	auto *str = (String *) msg->pData();
 
 #if IS_ARDUINO == 0
 	cout << "Hello world!!! " << *str << endl;
@@ -176,10 +217,9 @@ void MsgCenter::msg_center_test()
 	mc.notify(&subscriber, msg_id);                          // 通知订阅者
 	mc.notify(&subscriber, msg_id2);
 
-	mc.removeMsg(msg2.id);
-	mc.removeMsg(msg.id);                                    // 注销消息
+	mc.removeMsg(msg2.id());
+	mc.removeMsg(msg.id());                                    // 注销消息
 	mc.unsubscribe(&subscriber);                                // 注销订阅者
 
 	mc.end();
 }
-

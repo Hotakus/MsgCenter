@@ -1,20 +1,18 @@
+/******************************************************************
+ * @file Chain.cpp
+ * @author Hotakus (...)
+ * @email ttowfive@gmail.com
+ * @brief chain
+ * @version 1.0
+ * @date 2021/10/30 2:35
+ * @copyright Copyright (c) 2021/10/30
+*******************************************************************/
 #include "Chain.h"
 
 #define TAG             "Chain"
-#define CHAIN_PRINT_D   MSG_PRINT
-#define CHAIN_ALLOC     MSG_ALLOC
-#define CHAIN_REALLOC   MSG_REALLOC
-#define CHAIN_FREE      MSG_FREE
 
-Chain::Chain()
-{
-
-}
-
-Chain::~Chain()
-{
-
-}
+Chain::Chain() = default;
+Chain::~Chain() = default;
 
 /**
  * @brief Call this function before using chain.

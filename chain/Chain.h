@@ -1,3 +1,12 @@
+/******************************************************************
+ * @file Chain.h
+ * @author Hotakus (...)
+ * @email ttowfive@gmail.com
+ * @brief chain
+ * @version 1.0
+ * @date 2021/10/30 2:35
+ * @copyright Copyright (c) 2021/10/30
+*******************************************************************/
 #ifndef _CHAIN_H
 #define _CHAIN_H
 

@@ -1,24 +1,46 @@
 #ifndef _MSGCENTER_H
 #define _MSGCENTER_H
 
-#include <utility>
-
 #include "conf.h"
 #include "chain/Chain.h"
 
 namespace msgmanager {
 
+	/**
+	 * @brief Class msg type
+	 */
 	class msg_t {
 	private:
+		String _id;
+		void* _pData;
 	public:
-		String id;
-		void* pData;
+		void set(const String& id, void* pData = nullptr) {
+			this->id(id);
+			this->pData(pData);
+		}
 
-		void set(String _id, void* _pData);
-		template<class T> T* data();    // Get data by T
+		String& id() {
+			return this->_id;
+		}
+
+		void id(const String& id) {
+			this->_id = id;
+		}
+
+		void* pData() {
+			return this->_pData;
+		}
+
+		void pData(void* pData) {
+			this->_pData = pData;
+		}
 	};
 
 	typedef void (*msg_callback_t)(msg_t* msg);
+
+	/**
+	 * @brief Class subscriber type
+	 */
 	class subscriber_t {
 	public:
 		typedef struct _info{
@@ -76,14 +98,16 @@ namespace msgmanager {
 		static void peek();
 
 		bool addMsg(msg_t* msg);
-		bool removeMsg(String msgName);
-		msg_t* findMsg(String msgName);
+		bool removeMsg(const String& msgName);
+		msg_t* findMsg(const String& msgName);
 
 		bool subscribe(subscriber_t* subscriber);
 		bool unsubscribe(subscriber_t* subscriber);
-		subscriber_t* findSubscriber(String msgName);
-		bool notify(String& subscriberName, String& msgName);
-		bool notify(subscriber_t* subscriber, String& msgName);
+		subscriber_t* findSubscriber(const String& msgName);
+
+		bool notify(subscriber_t* subscriber, msg_t* msg);
+		bool notify(const String& subscriberName, const String& msgName);
+		bool notify(subscriber_t* subscriber, const String& msgName);
 
 		static void msg_center_test();
 	};
