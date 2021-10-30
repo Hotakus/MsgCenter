@@ -73,13 +73,18 @@ bool Chain::push_front(chain_node_t *_node)
 }
 
 /**
- * @brief
- * @return
+ * @brief Pop out tail node
+ * @return true
  */
 bool Chain::pop()
 {
-	erase(_tail->name());
-	return false;
+	chain_node_t* _node = _tail->prev();
+	_node->set(_node->prev(), _tail->next(), _node->node_data<void*>());
+	delete _tail;
+	_nodeCnt -= 1;
+	_tail = _node;
+	_curr = _node;
+	return true;
 }
 
 /**
