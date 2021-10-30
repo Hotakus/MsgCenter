@@ -67,8 +67,21 @@ namespace msgmanager {
 		 * @param msg  : Msg that want to subscribe
 		 * @param _mcb : Callback for the msg
 		 */
-		void subscribe_msg(String msg, msg_callback_t _mcb) {
-			info.msg_list.push_back(std::move(msg), (void*)_mcb);
+		void subscribe_msg(const String& msgName, msg_callback_t _mcb) {
+			if (info.msg_list.find(msgName)) {
+				MSG_PRINT(info.name.c_str(), "msg was subscribed already.");
+				return;
+			}
+			info.msg_list.push_back(msgName, (void*)_mcb);
+		}
+
+		void unsubscribe_msg(const String& msgName) {
+			info.msg_list.erase(msgName);
+		}
+
+		void unsubscribe_all() {
+			for (int i = 1; i < info.msg_list.nodeCnt(); ++i)
+				info.msg_list.pop();
 		}
 
 		/**
@@ -76,12 +89,12 @@ namespace msgmanager {
 		 * @param msgName : Msg callback name
 		 * @param msg     : Msg that want to emit
 		 */
-		void publish(const String& msgName, msg_t* msg) {
-			auto _node = this->info.msg_list.find(msgName);
+		void publish(msg_t* msg) {
+			auto _node = this->info.msg_list.find(msg->id());
 			if (_node)
 				_node->node_data<msg_callback_t>()(msg);
 			else
-				MSG_PRINT("", "msg callback is null");
+				MSG_PRINT(info.name.c_str(), "msg callback is null");
 		}
 	};
 
@@ -108,6 +121,9 @@ namespace msgmanager {
 		bool notify(subscriber_t* subscriber, msg_t* msg);
 		bool notify(const String& subscriberName, const String& msgName);
 		bool notify(subscriber_t* subscriber, const String& msgName);
+
+		bool broadcast(msg_t* msg);
+		bool broadcast(const String& msgName);
 
 		static void msg_center_test();
 	};
