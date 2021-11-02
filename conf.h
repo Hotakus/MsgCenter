@@ -25,7 +25,7 @@ using namespace std;
 #include <Arduino.h>
 
 #define TAG "MsgCenter"
-#define HGM_DEBUG 1
+#define HGM_DEBUG 0
 #include "../../HgmLogUtil.h"
 
 #if MSG_CENTER_DEBUG == 1
