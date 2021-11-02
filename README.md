@@ -1,5 +1,5 @@
 # MsgCenter
-The Msg framework by cpp
+The Msg's framework by cpp.
 
 ## How to use?
 ```shell
