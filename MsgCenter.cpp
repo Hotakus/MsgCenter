@@ -10,14 +10,14 @@ MsgCenter::~MsgCenter() = default;
 
 void MsgCenter::begin()
 {
-	msgChain.begin();
-	subsChain.begin();
+	_msgChain.begin();
+	_subsChain.begin();
 }
 
 void MsgCenter::end()
 {
-	msgChain.end();
-	subsChain.end();
+	_msgChain.end();
+	_subsChain.end();
 }
 
 /**
@@ -31,7 +31,7 @@ bool MsgCenter::subscribe(subscriber_t *subscriber)
 		MSG_PRINT(TAG, "Subscriber is null.");
 		return false;
 	}
-	subsChain.push_back(subscriber->info.name, subscriber);
+	_subsChain.push_back(subscriber->info.name, subscriber);
 	return true;
 }
 
@@ -47,13 +47,13 @@ bool MsgCenter::unsubscribe(subscriber_t *subscriber)
 		return false;
 	}
 
-	if (subsChain.nodeCnt() == 0) {
+	if (_subsChain.nodeCnt() == 0) {
 		MSG_PRINT(TAG, "Subscriber's count is nil.");
 		return false;
 	}
 
 	subscriber->unsubscribe_all();
-	subsChain.erase(subscriber->info.name);
+	_subsChain.erase(subscriber->info.name);
 	return true;
 }
 
@@ -69,14 +69,14 @@ bool MsgCenter::notify(const String &subscriberName, const String &msgName)
 		MSG_PRINT(TAG, "Subscriber name is null.");
 		return false;
 	}
-	auto _node = subsChain.find(subscriberName);
+	auto _node = _subsChain.find(subscriberName);
 	auto subscriber = _node ? _node->node_data<subscriber_t *>() : nullptr;
 	if (!subscriber) {
 		MSG_PRINT(TAG, "Subscriber: \"%s\" is not existing.", subscriberName.c_str());
 		return false;
 	}
 
-	_node = msgChain.find(msgName);
+	_node = _msgChain.find(msgName);
 	auto msg = _node ? _node->node_data<msg_t *>() : nullptr;
 	if (!msg) {
 		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", msgName.c_str());
@@ -100,7 +100,7 @@ bool MsgCenter::notify(subscriber_t *subscriber, const String &msgName)
 		return false;
 	}
 
-	auto _node = msgChain.find(msgName);
+	auto _node = _msgChain.find(msgName);
 	auto msg = _node ? _node->node_data<msg_t *>() : nullptr;
 	if (!msg) {
 		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", msgName.c_str());
@@ -140,7 +140,7 @@ bool MsgCenter::notify(subscriber_t *subscriber, msg_t *msg)
  */
 bool MsgCenter::addMsg(msg_t *msg)
 {
-	return msgChain.push_back(msg->id(), msg);
+	return _msgChain.push_back(msg->id(), msg);
 }
 
 /**
@@ -150,7 +150,7 @@ bool MsgCenter::addMsg(msg_t *msg)
  */
 bool MsgCenter::removeMsg(const String &msgName)
 {
-	if (msgChain.erase(msgName))
+	if (_msgChain.erase(msgName))
 		return true;
 	MSG_PRINT(TAG, "Remove \"%s\" failed.", msgName.c_str());
 	return false;
@@ -163,7 +163,7 @@ void MsgCenter::peek()
 
 msg_t *MsgCenter::findMsg(const String &msgName)
 {
-	chain_node_t *_node = msgChain.find(msgName);
+	chain_node_t *_node = _msgChain.find(msgName);
 	if (_node)
 		return _node->node_data<msg_t *>();
 	return nullptr;
@@ -171,7 +171,7 @@ msg_t *MsgCenter::findMsg(const String &msgName)
 
 subscriber_t *MsgCenter::findSubscriber(const String &subscriberName)
 {
-	chain_node_t *_node = msgChain.find(subscriberName);
+	chain_node_t *_node = _msgChain.find(subscriberName);
 	if (_node)
 		return _node->node_data<subscriber_t *>();
 	return nullptr;
@@ -189,8 +189,8 @@ bool MsgCenter::broadcast(msg_t *msg)
 		return false;
 	}
 
-	auto probe = subsChain.head()->next();
-	for (size_t i = 1; i < subsChain.nodeCnt(); ++i) {
+	auto probe = _subsChain.head()->next();
+	for (size_t i = 1; i < _subsChain.nodeCnt(); ++i) {
 		probe->node_data<subscriber_t *>()->publish(msg);
 		probe = probe->next();
 	}
@@ -211,8 +211,8 @@ bool MsgCenter::broadcast(const String &msgName)
 		return false;
 	}
 
-	auto probe = subsChain.head()->next();
-	for (size_t i = 1; i < subsChain.nodeCnt(); ++i) {
+	auto probe = _subsChain.head()->next();
+	for (size_t i = 1; i < _subsChain.nodeCnt(); ++i) {
 		probe->node_data<subscriber_t *>()->publish(msg);
 		probe = probe->next();
 	}
