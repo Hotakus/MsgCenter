@@ -100,8 +100,8 @@ namespace msgmanager {
 
 	class MsgCenter {
 	private:
-		Chain msgChain;
-		Chain subsChain;
+		Chain _msgChain;
+		Chain _subsChain;
 	public:
 		MsgCenter();
 		~MsgCenter();
@@ -109,6 +109,13 @@ namespace msgmanager {
 		void begin();
 		void end();
 		static void peek();
+
+		Chain& msgChain() {
+			return this->_msgChain;
+		}
+		Chain& subsChain() {
+			return this->_subsChain;
+		}
 
 		bool addMsg(msg_t* msg);
 		bool removeMsg(const String& msgName);
