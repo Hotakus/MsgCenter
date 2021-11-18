@@ -66,7 +66,7 @@ bool MsgCenter::notify(const String &subscriberName, const String &msgName)
 {
 	auto subscriber = findSubscriber(subscriberName);
 	if (!subscriber) {
-		MSG_PRINT(TAG, "Subscriber: \"%s\" is not existing.", subscriberName.c_str())
+		MSG_PRINT(TAG, "Subscriber: \"%s\" is not existing.", subscriberName.c_str());
 		return false;
 	}
 
@@ -166,7 +166,7 @@ msg_t *MsgCenter::findMsg(const String &msgName)
 
 subscriber_t *MsgCenter::findSubscriber(const String &subscriberName)
 {
-	auto *_node = _msgChain.find(subscriberName);
+	auto *_node = _subsChain.find(subscriberName);
 	if (_node)
 		return _node->node_data<subscriber_t *>();
 	return nullptr;
