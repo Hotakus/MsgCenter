@@ -108,7 +108,7 @@ namespace msgmanager {
 
 		void begin();
 		void end();
-		static void peek();
+		void peek();
 
 		Chain& msgChain() {
 			return this->_msgChain;

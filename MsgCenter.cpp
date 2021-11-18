@@ -31,8 +31,8 @@ bool MsgCenter::subscribe(subscriber_t *subscriber)
 		MSG_PRINT(TAG, "Subscriber is null.");
 		return false;
 	}
-	_subsChain.push_back(subscriber->info.name, subscriber);
-	return true;
+
+	return _subsChain.push_back(subscriber->info.name, subscriber);
 }
 
 /**
@@ -53,8 +53,7 @@ bool MsgCenter::unsubscribe(subscriber_t *subscriber)
 	}
 
 	subscriber->unsubscribe_all();
-	_subsChain.erase(subscriber->info.name);
-	return true;
+	return _subsChain.erase(subscriber->info.name);
 }
 
 /**
@@ -65,19 +64,13 @@ bool MsgCenter::unsubscribe(subscriber_t *subscriber)
  */
 bool MsgCenter::notify(const String &subscriberName, const String &msgName)
 {
-	if (subscriberName == "") {
-		MSG_PRINT(TAG, "Subscriber name is null.");
-		return false;
-	}
-	auto _node = _subsChain.find(subscriberName);
-	auto subscriber = _node ? _node->node_data<subscriber_t *>() : nullptr;
+	auto subscriber = findSubscriber(subscriberName);
 	if (!subscriber) {
-		MSG_PRINT(TAG, "Subscriber: \"%s\" is not existing.", subscriberName.c_str());
+		MSG_PRINT(TAG, "Subscriber: \"%s\" is not existing.", subscriberName.c_str())
 		return false;
 	}
 
-	_node = _msgChain.find(msgName);
-	auto msg = _node ? _node->node_data<msg_t *>() : nullptr;
+	auto msg = findMsg(msgName);
 	if (!msg) {
 		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", msgName.c_str());
 		return false;
@@ -100,8 +93,7 @@ bool MsgCenter::notify(subscriber_t *subscriber, const String &msgName)
 		return false;
 	}
 
-	auto _node = _msgChain.find(msgName);
-	auto msg = _node ? _node->node_data<msg_t *>() : nullptr;
+	auto msg = findMsg(msgName);
 	if (!msg) {
 		MSG_PRINT(TAG, "Msg: \"%s\" is not existing.", msgName.c_str());
 		return false;
@@ -156,6 +148,9 @@ bool MsgCenter::removeMsg(const String &msgName)
 	return false;
 }
 
+/**
+ * @brief Peek the members of subscribers or msgs.
+ */
 void MsgCenter::peek()
 {
 
@@ -163,7 +158,7 @@ void MsgCenter::peek()
 
 msg_t *MsgCenter::findMsg(const String &msgName)
 {
-	chain_node_t *_node = _msgChain.find(msgName);
+	auto *_node = _msgChain.find(msgName);
 	if (_node)
 		return _node->node_data<msg_t *>();
 	return nullptr;
@@ -171,7 +166,7 @@ msg_t *MsgCenter::findMsg(const String &msgName)
 
 subscriber_t *MsgCenter::findSubscriber(const String &subscriberName)
 {
-	chain_node_t *_node = _msgChain.find(subscriberName);
+	auto *_node = _msgChain.find(subscriberName);
 	if (_node)
 		return _node->node_data<subscriber_t *>();
 	return nullptr;
@@ -267,6 +262,7 @@ void MsgCenter::msg_center_test()
 	mc.subscribe(&one);
 
 	str += "!!!";                       // 修改消息 01
+	mc.notify(name1, msg.id());          // 用特定消息通知特定订阅者
 	mc.notify(&hotakus, &msg);          // 用特定消息通知特定订阅者
 	str += "!!!";                       // 修改消息 02
 	mc.broadcast(&msg);                 // 广播特定消息到所有订阅此消息的订阅者
