@@ -5,9 +5,6 @@
 
 using namespace msgmanager;
 
-MsgCenter::MsgCenter() = default;
-MsgCenter::~MsgCenter() = default;
-
 void MsgCenter::begin()
 {
 	_msgChain.begin();
@@ -32,7 +29,7 @@ bool MsgCenter::subscribe(subscriber_t *subscriber)
 		return false;
 	}
 
-	return _subsChain.push_back(subscriber->info.name, subscriber);
+	return _subsChain.push_back(subscriber->name(), subscriber);
 }
 
 /**
@@ -53,7 +50,7 @@ bool MsgCenter::unsubscribe(subscriber_t *subscriber)
 	}
 
 	subscriber->unsubscribe_all();
-	return _subsChain.erase(subscriber->info.name);
+	return _subsChain.erase(subscriber->name());
 }
 
 /**
@@ -232,48 +229,39 @@ void MsgCenter::msg_center_test()
 	MsgCenter mc;
 	mc.begin();
 
-	subscriber_t hotakus;
-	String name1 = "Hotakus";
-	hotakus.set(name1);
-
-	subscriber_t trisuborn;
-	String name2 = "Trisuborn";
-	trisuborn.set(name2);
-
-	subscriber_t one;
-	String name3 = "someone";
-	one.set(name3);
+	subscriber_t hotakus("Hotakus");
+	subscriber_t trisuborn("Trisuborn");
+	subscriber_t someone("someone");
 
 	String str = "Hotakus is a handsome man ";
-	msg_t msg;
-	String msg_id = "testMsg";
-	msg.set(msg_id, &str);
-
+	msg_t msg("testMsg", &str);
 	mc.addMsg(&msg);            // 注册消息
 
 	/* 订阅者订阅消息 */
-	hotakus.subscribe_msg(msg_id, msg_center_test_cb);
-	trisuborn.subscribe_msg(msg_id, msg_center_test_cb);
-	one.subscribe_msg(msg_id, msg_center_test_cb);
+	hotakus.subscribe_msg(msg.id(), msg_center_test_cb);
+	trisuborn.subscribe_msg(msg.id(), msg_center_test_cb);
+	someone.subscribe_msg(msg.id(), msg_center_test_cb);
 
 	/* 注册订阅者 */
 	mc.subscribe(&hotakus);
 	mc.subscribe(&trisuborn);
-	mc.subscribe(&one);
+	mc.subscribe(&someone);
 
-	str += "!!!";                       // 修改消息 01
-	mc.notify(name1, msg.id());          // 用特定消息通知特定订阅者
-	mc.notify(&hotakus, &msg);          // 用特定消息通知特定订阅者
-	str += "!!!";                       // 修改消息 02
-	mc.broadcast(&msg);                 // 广播特定消息到所有订阅此消息的订阅者
+	str += "!!!";                                   // 修改消息 01
+	mc.notify(hotakus.name(), msg.id());            // 用特定消息通知特定订阅者
+	mc.notify(&hotakus, &msg);                      // 用特定消息通知特定订阅者
+	str += "!!!";                                   // 修改消息 02
+	mc.broadcast(&msg);                             // 广播特定消息到所有订阅此消息的订阅者
+	str += "!!! HaHaHa";                            // 修改消息 03
+	mc.broadcast(msg.id());                         // 广播特定消息到所有订阅此消息的订阅者
 
-	trisuborn.unsubscribe_msg(msg.id());// 退订特定消息
-	hotakus.unsubscribe_all();          // 退订所有消息
+	trisuborn.unsubscribe_msg(msg.id());            // 退订特定消息
+	hotakus.unsubscribe_all();                      // 退订所有消息
 
 	/* 订阅者退订所有消息并注销 */
 	mc.unsubscribe(&hotakus);
 	mc.unsubscribe(&trisuborn);
-	mc.unsubscribe(&one);
+	mc.unsubscribe(&someone);
 
 	mc.removeMsg(msg.id());             // 注销消息
 	mc.end();

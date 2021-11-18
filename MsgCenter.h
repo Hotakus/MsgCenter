@@ -12,54 +12,65 @@ namespace msgmanager {
 	class msg_t {
 	private:
 		String _id;
-		void* _pData;
+		void *_pData = nullptr;
 	public:
-		void set(const String& id, void* pData = nullptr) {
-			this->id(id);
-			this->pData(pData);
+		msg_t() = default;
+		~msg_t() = default;
+		explicit msg_t(const String& id, void* dat = nullptr) {
+			_id = id;
+			_pData = dat;
 		}
 
-		String& id() {
+		String &id() {
 			return this->_id;
 		}
 
-		void id(const String& id) {
+		void id(const String &id) {
 			this->_id = id;
 		}
 
-		void* pData() {
+		void *pData() {
 			return this->_pData;
 		}
 
-		void pData(void* pData) {
+		void pData(void *pData) {
 			this->_pData = pData;
 		}
 	};
 
-	typedef void (*msg_callback_t)(msg_t* msg);
+	typedef void (*msg_callback_t)(msg_t *msg);
 
 	/**
 	 * @brief Class subscriber type
 	 */
 	class subscriber_t {
+	private:
+		String _name;
+		Chain _msg_list;
 	public:
-		typedef struct _info{
-			String name;
-			Chain msg_list;
-		} info_t;
-
-		info_t info;
-
 		subscriber_t() {
-			info.msg_list.begin();
+			_msg_list.begin();
+		}
+
+		explicit subscriber_t(const String &name) {
+			_msg_list.begin();
+			_name = name;
 		}
 
 		~subscriber_t() {
-			info.msg_list.end();
+			_msg_list.end();
 		}
 
-		void set(String& _name) {
-			this->info.name = _name;
+		void name(const String& name) {
+			_name = name;
+		}
+
+		String& name() {
+			return _name;
+		}
+
+		Chain& msg_list() {
+			return _msg_list;
 		}
 
 		/**
@@ -67,21 +78,24 @@ namespace msgmanager {
 		 * @param msg  : Msg that want to subscribe
 		 * @param _mcb : Callback for the msg
 		 */
-		void subscribe_msg(const String& msgName, msg_callback_t _mcb) {
-			if (info.msg_list.find(msgName)) {
+		void subscribe_msg(const String &msgName, msg_callback_t _mcb)
+		{
+			if (msg_list().find(msgName)) {
 				MSG_PRINT(info.name.c_str(), "msg was subscribed already.");
 				return;
 			}
-			info.msg_list.push_back(msgName, (void*)_mcb);
+			msg_list().push_back(msgName, (void *) _mcb);
 		}
 
-		void unsubscribe_msg(const String& msgName) {
-			info.msg_list.erase(msgName);
+		void unsubscribe_msg(const String &msgName)
+		{
+			msg_list().erase(msgName);
 		}
 
-		void unsubscribe_all() {
-			for (int i = 1; i < info.msg_list.nodeCnt(); ++i)
-				info.msg_list.pop();
+		void unsubscribe_all()
+		{
+			for (int i = 1; i < msg_list().nodeCnt(); ++i)
+				msg_list().pop();
 		}
 
 		/**
@@ -89,8 +103,9 @@ namespace msgmanager {
 		 * @param msgName : Msg callback name
 		 * @param msg     : Msg that want to emit
 		 */
-		void publish(msg_t* msg) {
-			auto _node = this->info.msg_list.find(msg->id());
+		void publish(msg_t *msg)
+		{
+			auto _node = msg_list().find(msg->id());
 			if (_node)
 				_node->node_data<msg_callback_t>()(msg);
 			else
@@ -103,40 +118,39 @@ namespace msgmanager {
 		Chain _msgChain;
 		Chain _subsChain;
 	public:
-		MsgCenter();
-		~MsgCenter();
+		MsgCenter() = default;
+		~MsgCenter() = default;
 
 		void begin();
 		void end();
 		void peek();
 
-		Chain& msgChain() {
+		Chain &msgChain() {
 			return this->_msgChain;
 		}
-		Chain& subsChain() {
+
+		Chain &subsChain() {
 			return this->_subsChain;
 		}
 
-		bool addMsg(msg_t* msg);
-		bool removeMsg(const String& msgName);
-		msg_t* findMsg(const String& msgName);
+		bool addMsg(msg_t *msg);
+		bool removeMsg(const String &msgName);
+		msg_t *findMsg(const String &msgName);
 
-		bool subscribe(subscriber_t* subscriber);
-		bool unsubscribe(subscriber_t* subscriber);
-		subscriber_t* findSubscriber(const String& msgName);
+		bool subscribe(subscriber_t *subscriber);
+		bool unsubscribe(subscriber_t *subscriber);
+		subscriber_t *findSubscriber(const String &msgName);
 
-		bool notify(subscriber_t* subscriber, msg_t* msg);
-		bool notify(const String& subscriberName, const String& msgName);
-		bool notify(subscriber_t* subscriber, const String& msgName);
+		bool notify(subscriber_t *subscriber, msg_t *msg);
+		bool notify(const String &subscriberName, const String &msgName);
+		bool notify(subscriber_t *subscriber, const String &msgName);
 
-		bool broadcast(msg_t* msg);
-		bool broadcast(const String& msgName);
+		bool broadcast(msg_t *msg);
+		bool broadcast(const String &msgName);
 
 		static void msg_center_test();
 	};
 };
-
-
 
 
 #ifdef __cplusplus
