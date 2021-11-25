@@ -161,7 +161,6 @@ String MsgCenter::peek(uint8_t member)
 
 	peek_result.pop_back();
 	peek_result.pop_back();
-	cout << peek_result << endl;
 
 	return peek_result;
 }
