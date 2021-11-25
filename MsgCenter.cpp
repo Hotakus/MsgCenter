@@ -150,17 +150,15 @@ bool MsgCenter::removeMsg(const String &msgName)
  */
 String MsgCenter::peek(uint8_t member)
 {
-	String peek_result = String(member ? "Subscribers: ":"Msgs: ");
 	Chain& chain = member ? subsChain(): msgChain();
+	String peek_result = String(member ? "Subscribers["[chain.nodeCnt()-1] + String("]: ")
+										:"Msgs["[chain.nodeCnt()-1] + String("]: "));
 	auto probe = chain.head()->next();
 
 	for (size_t i = 1; i < chain.nodeCnt(); ++i) {
-		peek_result += probe->name() + String("->");
+		peek_result += probe->name() + (probe->isTail() ? String("") : String("->"));
 		probe = probe->next();
 	}
-
-	peek_result.pop_back();
-	peek_result.pop_back();
 
 	return peek_result;
 }
