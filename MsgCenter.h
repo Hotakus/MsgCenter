@@ -123,7 +123,7 @@ namespace msgmanager {
 
 		void begin();
 		void end();
-		void peek();
+		String peek(uint8_t member);
 
 		Chain &msgChain() {
 			return this->_msgChain;

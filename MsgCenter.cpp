@@ -148,9 +148,22 @@ bool MsgCenter::removeMsg(const String &msgName)
 /**
  * @brief Peek the members of subscribers or msgs.
  */
-void MsgCenter::peek()
+String MsgCenter::peek(uint8_t member)
 {
+	String peek_result = String(member ? "Subscribers: ":"Msgs: ");
+	Chain& chain = member ? subsChain(): msgChain();
+	auto probe = chain.head()->next();
 
+	for (size_t i = 1; i < chain.nodeCnt(); ++i) {
+		peek_result += probe->name() + String("->");
+		probe = probe->next();
+	}
+
+	peek_result.pop_back();
+	peek_result.pop_back();
+	cout << peek_result << endl;
+
+	return peek_result;
 }
 
 msg_t *MsgCenter::findMsg(const String &msgName)
@@ -246,6 +259,9 @@ void MsgCenter::msg_center_test()
 	mc.subscribe(&hotakus);
 	mc.subscribe(&trisuborn);
 	mc.subscribe(&someone);
+
+	mc.peek(0);
+	mc.peek(1);
 
 	str += "!!!";                                   // 修改消息 01
 	mc.notify(hotakus.name(), msg.id());            // 用特定消息通知特定订阅者
