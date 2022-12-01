@@ -1,0 +1,110 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/ubuntu/packs/MC/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/6c57fc0f/
+APP_SRC	CMakeLists.txt	/^set(APP_SRC$/;"	v
+Chain	chain/Chain.h	/^class Chain {$/;"	c
+HGM_DEBUG	conf.h	/^#define HGM_DEBUG /;"	d
+How to use?	README.md	/^## How to use?$/;"	s	chapter:MsgCenter
+IS_ARDUINO	msg_center_conf.h	/^#define IS_ARDUINO /;"	d
+MCC	CMakeLists.txt	/^project(MCC)$/;"	p
+MSG_ALLOC	conf.h	/^#define MSG_ALLOC /;"	d
+MSG_CENTER_CONF_H	conf.h	/^#define MSG_CENTER_CONF_H$/;"	d
+MSG_FREE	conf.h	/^#define MSG_FREE /;"	d
+MSG_PRINT	conf.h	/^#define MSG_PRINT /;"	d
+MSG_PRINT	conf.h	/^#define MSG_PRINT(/;"	d
+MSG_REALLOC	conf.h	/^#define MSG_REALLOC /;"	d
+MsgCenter	MsgCenter.h	/^class MsgCenter {$/;"	c	namespace:msgmanager
+MsgCenter	README.md	/^# MsgCenter$/;"	c
+String	conf.h	/^typedef std::string String;$/;"	t	typeref:typename:std::string
+TAG	MsgCenter.cpp	/^#define TAG /;"	d	file:
+TAG	chain/Chain.cpp	/^#define TAG /;"	d	file:
+TAG	conf.h	/^#define TAG /;"	d
+_CHAIN_H	chain/Chain.h	/^#define _CHAIN_H$/;"	d
+_CHAIN_NODE_T_H	chain/chain_node_t.h	/^#define _CHAIN_NODE_T_H$/;"	d
+_MSGCENTER_H	MsgCenter.h	/^#define _MSGCENTER_H$/;"	d
+_MSG_CENTER_CONF_H	msg_center_conf.h	/^#define _MSG_CENTER_CONF_H$/;"	d
+_curr	chain/Chain.h	/^    chain_node_t* _curr = nullptr;$/;"	m	class:Chain	typeref:typename:chain_node_t *
+_head	chain/Chain.h	/^    chain_node_t* _head = nullptr;$/;"	m	class:Chain	typeref:typename:chain_node_t *
+_id	MsgCenter.h	/^    String _id;$/;"	m	class:msgmanager::msg_t	typeref:typename:String
+_msgChain	MsgCenter.h	/^    Chain _msgChain;$/;"	m	class:msgmanager::MsgCenter	typeref:typename:Chain
+_msg_list	MsgCenter.h	/^    Chain _msg_list;$/;"	m	class:msgmanager::subscriber_t	typeref:typename:Chain
+_name	MsgCenter.h	/^    String _name;$/;"	m	class:msgmanager::subscriber_t	typeref:typename:String
+_nodeCnt	chain/Chain.h	/^    size_t _nodeCnt = 1;$/;"	m	class:Chain	typeref:typename:size_t
+_pData	MsgCenter.h	/^    void *_pData = nullptr;$/;"	m	class:msgmanager::msg_t	typeref:typename:void *
+_subsChain	MsgCenter.h	/^    Chain _subsChain;$/;"	m	class:msgmanager::MsgCenter	typeref:typename:Chain
+_tail	chain/Chain.h	/^    chain_node_t* _tail = nullptr;$/;"	m	class:Chain	typeref:typename:chain_node_t *
+addMsg	MsgCenter.cpp	/^bool MsgCenter::addMsg(msg_t *msg)$/;"	f	class:MsgCenter	typeref:typename:bool
+begin	MsgCenter.cpp	/^void MsgCenter::begin()$/;"	f	class:MsgCenter	typeref:typename:void
+begin	chain/Chain.cpp	/^void Chain::begin()$/;"	f	class:Chain	typeref:typename:void
+broadcast	MsgCenter.cpp	/^bool MsgCenter::broadcast(const String &msgName)$/;"	f	class:MsgCenter	typeref:typename:bool
+broadcast	MsgCenter.cpp	/^bool MsgCenter::broadcast(msg_t *msg)$/;"	f	class:MsgCenter	typeref:typename:bool
+chain_node_t	chain/chain_node_t.h	/^class chain_node_t {$/;"	c
+end	MsgCenter.cpp	/^void MsgCenter::end()$/;"	f	class:MsgCenter	typeref:typename:void
+end	chain/Chain.cpp	/^void Chain::end()$/;"	f	class:Chain	typeref:typename:void
+erase	chain/Chain.cpp	/^bool Chain::erase(const String& name)$/;"	f	class:Chain	typeref:typename:bool
+example:	README.md	/^## example:$/;"	s	chapter:MsgCenter
+find	chain/Chain.cpp	/^chain_node_t *Chain::find(const String& name)$/;"	f	class:Chain	typeref:typename:chain_node_t *
+findMsg	MsgCenter.cpp	/^msg_t *MsgCenter::findMsg(const String &msgName)$/;"	f	class:MsgCenter	typeref:typename:msg_t *
+findSubscriber	MsgCenter.cpp	/^subscriber_t *MsgCenter::findSubscriber(const String &subscriberName)$/;"	f	class:MsgCenter	typeref:typename:subscriber_t *
+head	chain/Chain.cpp	/^chain_node_t *Chain::head()$/;"	f	class:Chain	typeref:typename:chain_node_t *
+id	MsgCenter.h	/^    String &id() {$/;"	f	class:msgmanager::msg_t	typeref:typename:String &
+id	MsgCenter.h	/^    void id(const String &id) {$/;"	f	class:msgmanager::msg_t	typeref:typename:void
+insert	chain/Chain.cpp	/^bool Chain::insert(chain_node_t *_node, size_t _id)$/;"	f	class:Chain	typeref:typename:bool
+isHead	chain/chain_node_t.cpp	/^bool chain_node_t::isHead()$/;"	f	class:chain_node_t	typeref:typename:bool
+isTail	chain/chain_node_t.cpp	/^bool chain_node_t::isTail()$/;"	f	class:chain_node_t	typeref:typename:bool
+main	main.cpp	/^int main (int argc, char *argv[])$/;"	f	typeref:typename:int
+mcc_shared	CMakeLists.txt	/^add_library(mcc_shared SHARED ${APP_SRC})$/;"	t
+mcc_static	CMakeLists.txt	/^add_library(mcc_static STATIC ${APP_SRC})$/;"	t
+msgChain	MsgCenter.h	/^    Chain &msgChain() {$/;"	f	class:msgmanager::MsgCenter	typeref:typename:Chain &
+msg_callback_t	MsgCenter.h	/^typedef void (*msg_callback_t)(msg_t *msg);$/;"	t	namespace:msgmanager	typeref:typename:void (*)(msg_t * msg)
+msg_center_test	MsgCenter.cpp	/^void MsgCenter::msg_center_test()$/;"	f	class:MsgCenter	typeref:typename:void
+msg_center_test_cb	MsgCenter.cpp	/^static void msg_center_test_cb(msg_t *msg)$/;"	f	typeref:typename:void	file:
+msg_list	MsgCenter.h	/^    Chain& msg_list() {$/;"	f	class:msgmanager::subscriber_t	typeref:typename:Chain &
+msg_t	MsgCenter.h	/^    explicit msg_t(const String& id, void* dat = nullptr) {$/;"	f	class:msgmanager::msg_t
+msg_t	MsgCenter.h	/^class msg_t {$/;"	c	namespace:msgmanager
+msgmanager	MsgCenter.h	/^namespace msgmanager {$/;"	n
+name	MsgCenter.h	/^    String& name() {$/;"	f	class:msgmanager::subscriber_t	typeref:typename:String &
+name	MsgCenter.h	/^    void name(const String& name) {$/;"	f	class:msgmanager::subscriber_t	typeref:typename:void
+name	chain/chain_node_t.h	/^    String& name() {$/;"	f	class:chain_node_t	typeref:typename:String &
+name	chain/chain_node_t.h	/^    void name(String _name) {$/;"	f	class:chain_node_t	typeref:typename:void
+next	chain/chain_node_t.cpp	/^chain_node_t *chain_node_t::next()$/;"	f	class:chain_node_t	typeref:typename:chain_node_t *
+next	chain/chain_node_t.cpp	/^void chain_node_t::next(chain_node_t *_node)$/;"	f	class:chain_node_t	typeref:typename:void
+nextNode	chain/chain_node_t.h	/^    chain_node_t* nextNode = nullptr;$/;"	m	class:chain_node_t	typeref:typename:chain_node_t *
+nodeCnt	chain/Chain.h	/^    size_t nodeCnt() {$/;"	f	class:Chain	typeref:typename:size_t
+nodeName	chain/chain_node_t.h	/^    String nodeName;$/;"	m	class:chain_node_t	typeref:typename:String
+node_data	chain/chain_node_t.h	/^    template<class T> T node_data() {$/;"	f	class:chain_node_t	typeref:typename:T
+notify	MsgCenter.cpp	/^bool MsgCenter::notify(const String &subscriberName, const String &msgName)$/;"	f	class:MsgCenter	typeref:typename:bool
+notify	MsgCenter.cpp	/^bool MsgCenter::notify(subscriber_t *subscriber, const String &msgName)$/;"	f	class:MsgCenter	typeref:typename:bool
+notify	MsgCenter.cpp	/^bool MsgCenter::notify(subscriber_t *subscriber, msg_t *msg)$/;"	f	class:MsgCenter	typeref:typename:bool
+pData	MsgCenter.h	/^    void *pData() {$/;"	f	class:msgmanager::msg_t	typeref:typename:void *
+pData	MsgCenter.h	/^    void pData(void *pData) {$/;"	f	class:msgmanager::msg_t	typeref:typename:void
+pData	chain/chain_node_t.h	/^    void* pData = nullptr;$/;"	m	class:chain_node_t	typeref:typename:void *
+peek	MsgCenter.cpp	/^String MsgCenter::peek(uint8_t member)$/;"	f	class:MsgCenter	typeref:typename:String
+pop	chain/Chain.cpp	/^bool Chain::pop()$/;"	f	class:Chain	typeref:typename:bool
+prev	chain/chain_node_t.cpp	/^chain_node_t *chain_node_t::prev()$/;"	f	class:chain_node_t	typeref:typename:chain_node_t *
+prev	chain/chain_node_t.cpp	/^void chain_node_t::prev(chain_node_t *_node)$/;"	f	class:chain_node_t	typeref:typename:void
+prevNode	chain/chain_node_t.h	/^    chain_node_t* prevNode = nullptr;$/;"	m	class:chain_node_t	typeref:typename:chain_node_t *
+publish	MsgCenter.h	/^    void publish(msg_t *msg)$/;"	f	class:msgmanager::subscriber_t	typeref:typename:void
+push_back	chain/Chain.cpp	/^bool Chain::push_back(String _name, void *_pData)$/;"	f	class:Chain	typeref:typename:bool
+push_front	chain/Chain.cpp	/^bool Chain::push_front(chain_node_t *_node)$/;"	f	class:Chain	typeref:typename:bool
+removeMsg	MsgCenter.cpp	/^bool MsgCenter::removeMsg(const String &msgName)$/;"	f	class:MsgCenter	typeref:typename:bool
+set	chain/chain_node_t.cpp	/^void chain_node_t::set(chain_node_t *_prevNode, chain_node_t *_nextNode, void *_pData)$/;"	f	class:chain_node_t	typeref:typename:void
+subsChain	MsgCenter.h	/^    Chain &subsChain() {$/;"	f	class:msgmanager::MsgCenter	typeref:typename:Chain &
+subscribe	MsgCenter.cpp	/^bool MsgCenter::subscribe(subscriber_t *subscriber)$/;"	f	class:MsgCenter	typeref:typename:bool
+subscribe_msg	MsgCenter.h	/^    void subscribe_msg(const String &msgName, msg_callback_t _mcb)$/;"	f	class:msgmanager::subscriber_t	typeref:typename:void
+subscriber_t	MsgCenter.h	/^    explicit subscriber_t(const String &name) {$/;"	f	class:msgmanager::subscriber_t
+subscriber_t	MsgCenter.h	/^    subscriber_t() {$/;"	f	class:msgmanager::subscriber_t
+subscriber_t	MsgCenter.h	/^class subscriber_t {$/;"	c	namespace:msgmanager
+tail	chain/Chain.cpp	/^chain_node_t *Chain::tail()$/;"	f	class:Chain	typeref:typename:chain_node_t *
+unsubscribe	MsgCenter.cpp	/^bool MsgCenter::unsubscribe(subscriber_t *subscriber)$/;"	f	class:MsgCenter	typeref:typename:bool
+unsubscribe_all	MsgCenter.h	/^    void unsubscribe_all()$/;"	f	class:msgmanager::subscriber_t	typeref:typename:void
+unsubscribe_msg	MsgCenter.h	/^    void unsubscribe_msg(const String &msgName)$/;"	f	class:msgmanager::subscriber_t	typeref:typename:void
+~subscriber_t	MsgCenter.h	/^    ~subscriber_t() {$/;"	f	class:msgmanager::subscriber_t

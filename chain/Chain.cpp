@@ -19,11 +19,11 @@ Chain::~Chain() = default;
  */
 void Chain::begin()
 {
-	_head = new chain_node_t();
-	_head->set(nullptr, nullptr, (void *) "chain_head");
-	_head->name("chain_head");
-	_curr = _head;
-	_tail = _curr;
+    _head = new chain_node_t();
+    _head->set(nullptr, nullptr, (void *) "chain_head");
+    _head->name("chain_head");
+    _curr = _head;
+    _tail = _curr;
 }
 
 /**
@@ -31,17 +31,17 @@ void Chain::begin()
  */
 void Chain::end()
 {
-	chain_node_t* probe = _head;
-	chain_node_t* _next;
-	for (; _nodeCnt; --_nodeCnt) {
-		_next = probe->next();
-		delete probe;
-		probe = _next;
-	}
+    chain_node_t* probe = _head;
+    chain_node_t* _next;
+    for (; _nodeCnt; --_nodeCnt) {
+        _next = probe->next();
+        delete probe;
+        probe = _next;
+    }
 
-	_head = nullptr;
-	_tail = nullptr;
-	_curr = nullptr;
+    _head = nullptr;
+    _tail = nullptr;
+    _curr = nullptr;
 }
 
 /**
@@ -52,14 +52,14 @@ void Chain::end()
  */
 bool Chain::push_back(String _name, void *_pData)
 {
-	_nodeCnt += 1;
-	auto *_node = new chain_node_t();
-	_curr->set(_curr->prev(), _node, _curr->node_data<void*>());
-	_node->set(_curr, nullptr, _pData);
-	_node->name(std::move(_name));
-	_curr = _node;
-	_tail = _node;
-	return true;
+    _nodeCnt += 1;
+    auto *_node = new chain_node_t();
+    _curr->set(_curr->prev(), _node, _curr->node_data<void*>());
+    _node->set(_curr, nullptr, _pData);
+    _node->name(std::move(_name));
+    _curr = _node;
+    _tail = _node;
+    return true;
 }
 
 /**
@@ -69,7 +69,7 @@ bool Chain::push_back(String _name, void *_pData)
  */
 bool Chain::push_front(chain_node_t *_node)
 {
-	return false;
+    return false;
 }
 
 /**
@@ -78,13 +78,13 @@ bool Chain::push_front(chain_node_t *_node)
  */
 bool Chain::pop()
 {
-	chain_node_t* _node = _tail->prev();
-	_node->set(_node->prev(), _tail->next(), _node->node_data<void*>());
-	delete _tail;
-	_nodeCnt -= 1;
-	_tail = _node;
-	_curr = _node;
-	return true;
+    chain_node_t* _node = _tail->prev();
+    _node->set(_node->prev(), _tail->next(), _node->node_data<void*>());
+    delete _tail;
+    _nodeCnt -= 1;
+    _tail = _node;
+    _curr = _node;
+    return true;
 }
 
 /**
@@ -94,40 +94,40 @@ bool Chain::pop()
  */
 bool Chain::erase(const String& name)
 {
-	chain_node_t *probe = _head;
-	for (int i = 0; i < _nodeCnt; ++i) {
-		if (probe->name() == name) {
-			if (probe->isHead())
-				return false;
-			chain_node_t* _node = probe->prev();
-			_node->set(_node->prev(), probe->next(), _node->node_data<void*>());
-			if (_node->isTail()) {
-				_tail = _node;
-				_curr = _node;
-			} else
-				probe->next()->set(_node, probe->next()->next(), probe->next()->node_data<void*>());
-			delete probe;
-			_nodeCnt -= 1;
-			return true;
-		}
-		probe = probe->next();
-	}
-	return false;
+    chain_node_t *probe = _head;
+    for (int i = 0; i < _nodeCnt; ++i) {
+        if (probe->name() == name) {
+            if (probe->isHead())
+                return false;
+            chain_node_t* _node = probe->prev();
+            _node->set(_node->prev(), probe->next(), _node->node_data<void*>());
+            if (_node->isTail()) {
+                _tail = _node;
+                _curr = _node;
+            } else
+        probe->next()->set(_node, probe->next()->next(), probe->next()->node_data<void*>());
+            delete probe;
+            _nodeCnt -= 1;
+            return true;
+        }
+        probe = probe->next();
+    }
+    return false;
 }
 
 bool Chain::insert(chain_node_t *_node, size_t _id)
 {
-	return false;
+    return false;
 }
 
 chain_node_t *Chain::head()
 {
-	return this->_head;
+    return this->_head;
 }
 
 chain_node_t *Chain::tail()
 {
-	return this->_tail;
+    return this->_tail;
 }
 
 /**
@@ -137,11 +137,11 @@ chain_node_t *Chain::tail()
  */
 chain_node_t *Chain::find(const String& name)
 {
-	chain_node_t* probe = _head;
-	for (int i = 0; i < _nodeCnt; ++i) {
-		if (probe->name() == name)
-			return probe;
-		probe = probe->next();
-	}
-	return nullptr;
+    chain_node_t* probe = _head;
+    for (int i = 0; i < _nodeCnt; ++i) {
+        if (probe->name() == name)
+            return probe;
+        probe = probe->next();
+    }
+    return nullptr;
 }

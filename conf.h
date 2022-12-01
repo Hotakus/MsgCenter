@@ -1,7 +1,7 @@
 #ifndef MSG_CENTER_CONF_H
 #define MSG_CENTER_CONF_H
 
-#include "../msg_center_conf.h"
+#include "msg_center_conf.h"
 
 #if IS_ARDUINO == 0
 #include <cstdio>
